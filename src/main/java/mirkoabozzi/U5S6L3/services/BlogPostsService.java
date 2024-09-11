@@ -1,12 +1,13 @@
 package mirkoabozzi.U5S6L3.services;
 
+import mirkoabozzi.U5S6L3.entities.Author;
 import mirkoabozzi.U5S6L3.entities.BlogPost;
+import mirkoabozzi.U5S6L3.entities.BlogPostsPayload;
 import mirkoabozzi.U5S6L3.exceptions.NotFoundException;
 import mirkoabozzi.U5S6L3.repositories.BlogPostsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,25 +15,31 @@ import java.util.UUID;
 public class BlogPostsService {
     @Autowired
     private BlogPostsRepository blogPostsRepository;
-    private List<BlogPost> blogPostList = new ArrayList<>();
+    @Autowired
+    private AuthorsService authorsService;
 
     //GET ALL
     public List<BlogPost> findAll() {
-        return this.blogPostList;
+        return this.blogPostsRepository.findAll();
     }
 
     //GET BLOGPOST
     public BlogPost findById(UUID id) {
-        BlogPost found = this.blogPostList.stream().filter(blogPost -> blogPost.getId() == id).findFirst().orElse(null);
-        if (found == null) throw new NotFoundException(id);
-        return found;
+        return this.blogPostsRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
     // POST
-    public BlogPost saveBlogPost(BlogPost payload) {
-        payload.setCover("http://localhost:8080/" + payload.getTitle());
-        this.blogPostList.add(payload);
-        return payload;
+    public BlogPost saveBlogPost(BlogPostsPayload payload) {
+        BlogPost bp = new BlogPost();
+        Author authorFound = this.authorsService.findById(payload.getAuthorId());
+        bp.setAuthor(authorFound);
+        bp.setCategory(payload.getCategory());
+        bp.setContent(payload.getContent());
+        bp.setReadingTime(payload.getReadingTime());
+        bp.setTitle(payload.getTitle());
+        bp.setCover("http://localhost:8080/" + payload.getTitle());
+        this.blogPostsRepository.save(bp);
+        return bp;
     }
 
     //PUT
@@ -48,7 +55,7 @@ public class BlogPostsService {
     //DELETE
     public void findBiIdAndDelete(UUID id) {
         BlogPost found = this.findById(id);
-        this.blogPostList.remove(found);
+        this.blogPostsRepository.delete(found);
     }
 
 }

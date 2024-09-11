@@ -1,6 +1,7 @@
 package mirkoabozzi.U5S6L3.controllers;
 
 import mirkoabozzi.U5S6L3.entities.BlogPost;
+import mirkoabozzi.U5S6L3.entities.BlogPostsPayload;
 import mirkoabozzi.U5S6L3.services.BlogPostsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class BlogPostsController {
 
     //POST
     @PostMapping
-    private BlogPost createBlogPosts(@RequestBody BlogPost body) {
+    private BlogPost createBlogPosts(@RequestBody BlogPostsPayload body) {
         return blogPostsService.saveBlogPost(body);
     }
 

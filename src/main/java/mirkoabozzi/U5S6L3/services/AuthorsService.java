@@ -15,7 +15,7 @@ import java.util.UUID;
 public class AuthorsService {
     @Autowired
     private AuthorsRepository authorsRepository;
-    
+
     //GET ALL
     public List<Author> findAll() {
         return this.authorsRepository.findAll();
