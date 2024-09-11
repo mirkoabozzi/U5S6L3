@@ -46,6 +46,8 @@ public class AuthorsService {
         found.setSurname(newAuthor.getSurname());
         found.setEmail(newAuthor.getEmail());
         found.setBirthDate(newAuthor.getBirthDate());
+        found.setAvatar("https://ui-avatars.com/api/?name=" + newAuthor.getName() + "+" + newAuthor.getSurname());
+        this.authorsRepository.save(found);
         return found;
     }
 

@@ -6,9 +6,11 @@ import mirkoabozzi.U5S6L3.entities.BlogPostsPayload;
 import mirkoabozzi.U5S6L3.exceptions.NotFoundException;
 import mirkoabozzi.U5S6L3.repositories.BlogPostsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,8 +21,8 @@ public class BlogPostsService {
     private AuthorsService authorsService;
 
     //GET ALL
-    public List<BlogPost> findAll() {
-        return this.blogPostsRepository.findAll();
+    public Page<BlogPost> findAll(int page, int size, String shortBy) {
+        return this.blogPostsRepository.findAll(PageRequest.of(page, size, Sort.by(shortBy)));
     }
 
     //GET BLOGPOST
@@ -49,6 +51,7 @@ public class BlogPostsService {
         found.setTitle(newBlogPost.getTitle());
         found.setContent(newBlogPost.getContent());
         found.setReadingTime(newBlogPost.getReadingTime());
+        this.blogPostsRepository.save(found);
         return found;
     }
 

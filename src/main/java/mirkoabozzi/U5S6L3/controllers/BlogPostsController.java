@@ -4,10 +4,10 @@ import mirkoabozzi.U5S6L3.entities.BlogPost;
 import mirkoabozzi.U5S6L3.entities.BlogPostsPayload;
 import mirkoabozzi.U5S6L3.services.BlogPostsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,8 +19,10 @@ public class BlogPostsController {
 
     //GET ALL
     @GetMapping
-    private List<BlogPost> getAllBlogPosts() {
-        return blogPostsService.findAll();
+    private Page<BlogPost> getAllBlogPosts(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size,
+                                           @RequestParam(defaultValue = "readingTime") String sortBy) {
+        return blogPostsService.findAll(page, size, sortBy);
     }
 
     //GET BY ID
