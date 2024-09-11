@@ -3,10 +3,10 @@ package mirkoabozzi.U5S6L3.controllers;
 import mirkoabozzi.U5S6L3.entities.Author;
 import mirkoabozzi.U5S6L3.services.AuthorsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -17,8 +17,10 @@ public class AuthorsController {
 
     // GET ALL
     @GetMapping
-    private List<Author> getAllAuthors() {
-        return authorsService.findAll();
+    private Page<Author> getAllAuthors(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "5") int size,
+                                       @RequestParam(defaultValue = "surname") String sortBy) {
+        return authorsService.findAll(page, size, sortBy);
     }
 
     // GET BY ID
