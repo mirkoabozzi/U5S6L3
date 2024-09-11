@@ -22,6 +22,7 @@ public class BlogPostsService {
 
     //GET ALL
     public Page<BlogPost> findAll(int page, int size, String shortBy) {
+        if (page > 100) page = 100;
         return this.blogPostsRepository.findAll(PageRequest.of(page, size, Sort.by(shortBy)));
     }
 

@@ -16,9 +16,9 @@ public class ExceptionsHandler {
         return new ErrorsPayload("Server Error", LocalDateTime.now());
     }
 
-    @ExceptionHandler(ValidationException.class)
+    @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorsPayload handleValidationException(ValidationException ex) {
+    public ErrorsPayload handleValidationException(BadRequestException ex) {
         return new ErrorsPayload(ex.getMessage(), LocalDateTime.now());
     }
 
