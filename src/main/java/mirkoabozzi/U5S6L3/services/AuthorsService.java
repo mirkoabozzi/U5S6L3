@@ -3,11 +3,11 @@ package mirkoabozzi.U5S6L3.services;
 
 import mirkoabozzi.U5S6L3.entities.Author;
 import mirkoabozzi.U5S6L3.exceptions.NotFoundException;
+import mirkoabozzi.U5S6L3.exceptions.ValidationException;
 import mirkoabozzi.U5S6L3.repositories.AuthorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,24 +15,23 @@ import java.util.UUID;
 public class AuthorsService {
     @Autowired
     private AuthorsRepository authorsRepository;
-    private List<Author> authorList = new ArrayList<>();
-
+    
     //GET ALL
     public List<Author> findAll() {
-        return this.authorList;
+        return this.authorsRepository.findAll();
     }
 
     // GET BY ID
     public Author findById(UUID id) {
-        Author found = this.authorList.stream().filter(author -> author.getId() == id).findFirst().orElse(null);
-        if (found == null) throw new NotFoundException(id);
-        else return found;
+        return this.authorsRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
     //POST
     public Author saveAuthor(Author payload) {
+        if (authorsRepository.existsByEmail(payload.getEmail()))
+            throw new ValidationException("Email " + payload.getEmail() + " già presente nel DB");
         payload.setAvatar("https://ui-avatars.com/api/?name=" + payload.getName() + "+" + payload.getSurname());
-        this.authorList.add(payload);
+        this.authorsRepository.save(payload);
         return payload;
     }
 
@@ -49,7 +48,7 @@ public class AuthorsService {
     //DELETE
     public void findByIdAndDelete(UUID id) {
         Author found = this.findById(id);
-        this.authorList.remove(found);
+        this.authorsRepository.delete(found);
     }
 
 }
